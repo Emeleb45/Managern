@@ -2,20 +2,20 @@ using UnityEngine;
 
 public class CameraOrbit : MonoBehaviour
 {
-    public Transform target; // The point the camera orbits around
-    public float moveSpeed = 5f; // WASD movement speed
+    public Transform target; 
+    public float moveSpeed = 5f; 
 
-    public float distance = 10.0f; // Default zoom distance
-    public float minDistance = 5f; // Min zoom distance
-    public float maxDistance = 20f; // Max zoom distance
-    public float zoomSpeed = 2f; // Speed of zooming
+    public float distance = 10.0f; 
+    public float minDistance = 5f; 
+    public float maxDistance = 20f; 
+    public float zoomSpeed = 2f; 
 
-    public float rotationSpeed = 5.0f; // Rotation speed
-    public float minYAngle = 10f; // Minimum vertical angle
-    public float maxYAngle = 80f; // Maximum vertical angle
+    public float rotationSpeed = 5.0f; 
+    public float minYAngle = 10f; 
+    public float maxYAngle = 80f; 
 
-    private float yaw = 0.0f; // Horizontal rotation
-    private float pitch = 30.0f; // Vertical rotation
+    private float yaw = 0.0f; 
+    private float pitch = 30.0f; 
 
     void Start()
     {
@@ -25,7 +25,7 @@ public class CameraOrbit : MonoBehaviour
             return;
         }
 
-        // Initialize rotation angles
+
         Vector3 angles = transform.eulerAngles;
         yaw = angles.y;
         pitch = angles.x;
@@ -44,12 +44,12 @@ public class CameraOrbit : MonoBehaviour
     void HandleMovement()
     {
         Vector3 move = new Vector3(
-            Input.GetAxis("Horizontal"), // A/D or Left/Right for X-axis
+            Input.GetAxis("Horizontal"), 
             0,
-            Input.GetAxis("Vertical")   // W/S or Up/Down for Z-axis
+            Input.GetAxis("Vertical")   
         );
         
-        // Move relative to camera rotation (ignoring Y-axis)
+
         Vector3 moveDirection = Quaternion.Euler(0, yaw, 0) * move;
         target.position += moveDirection * moveSpeed * Time.deltaTime;
     }

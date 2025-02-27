@@ -3,48 +3,48 @@ using UnityEngine;
 public class ManagerScript : MonoBehaviour
 {
     private BuildingPlacer buildingPlacer;
-    private RoadPlacer roadPlacer;
 
-    private enum Mode { None, Building, Road }
-    private Mode currentMode = Mode.None;
+    public GameObject[] buildingPrefabs;
 
     void Start()
     {
         buildingPlacer = GetComponent<BuildingPlacer>();
-        roadPlacer = GetComponent<RoadPlacer>();
-
-        // Ensure both are disabled initially
         buildingPlacer.enabled = false;
-        roadPlacer.enabled = false;
     }
 
     void Update()
     {
-        HandleModeSwitch();
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            StopBuilding();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            StartBuilding(0);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            StartBuilding(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            StartBuilding(2);
+        }
+
     }
 
-    void HandleModeSwitch()
+
+    public void StartBuilding(int prefabIndex)
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) // Press "1" for Buildings
+        if (prefabIndex >= 0 && prefabIndex < buildingPrefabs.Length)
         {
-            SetMode(Mode.Building);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2)) // Press "2" for Roads
-        {
-            SetMode(Mode.Road);
-        }
-        else if (Input.GetKeyDown(KeyCode.BackQuote)) // Press "`" to disable both
-        {
-            SetMode(Mode.None);
+            buildingPlacer.enabled = true;
+            buildingPlacer.StartBuilding(buildingPrefabs[prefabIndex]);
         }
     }
-
-    void SetMode(Mode mode)
+    public void StopBuilding()
     {
-        currentMode = mode;
-
-        // Enable/Disable Components based on mode
-        buildingPlacer.enabled = (currentMode == Mode.Building);
-        roadPlacer.enabled = (currentMode == Mode.Road);
+        buildingPlacer.enabled = false;
     }
+
 }

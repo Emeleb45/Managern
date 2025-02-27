@@ -10,48 +10,56 @@ public class BuildingPlacer : MonoBehaviour
     private Renderer buildingRenderer;
     private BuildingCollision collisionCheck;
     private bool canPlace = false;
+    private Quaternion currentRotation = Quaternion.identity;
 
     public Color validColor = Color.green;
     public Color invalidColor = Color.red;
     public float fixedY = 0.5f;
+    public float gridSize = 1.0f;
 
-    private bool isRotating = false;
+    private RoadManager roadManager;
 
     void Start()
     {
-        buildingsParent = GameObject.Find("Buildings");
-        if (buildingsParent == null)
-        {
-            buildingsParent = new GameObject("Buildings");
-        }
+        buildingsParent = GameObject.Find("Buildings") ?? new GameObject("Buildings");
+        roadManager = FindFirstObjectByType<RoadManager>();
     }
-    void OnDisable()
+
+    public void StartBuilding(GameObject newPrefab)
     {
+        if (newPrefab == null) return;
+
         if (previewBuilding)
         {
             Destroy(previewBuilding);
+            previewBuilding = null;
+        }
+
+        buildingPrefab = newPrefab;
+        currentRotation = Quaternion.identity;
+    }
+
+    void OnDisable()
+    {
+        buildingPrefab = null;
+
+        if (previewBuilding)
+        {
+            Destroy(previewBuilding);
+            previewBuilding = null;
         }
     }
+
     void Update()
     {
-        if (isRotating)
+        if (buildingPrefab == null)
         {
-            HandleRotation();
-        }
-        else
-        {
-            HandlePlacement();
+            enabled = false;
+            return;
         }
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            isRotating = true;
-        }
-
-        if (Input.GetMouseButtonUp(1))
-        {
-            isRotating = false;
-        }
+        HandlePlacement();
+        HandleRotation();
     }
 
     void HandlePlacement()
@@ -59,17 +67,18 @@ public class BuildingPlacer : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
         {
-            Vector3 newPos = new Vector3(hit.point.x, fixedY, hit.point.z);
+            Vector3 newPos = SnapToGrid(new Vector3(hit.point.x, fixedY, hit.point.z));
 
             if (previewBuilding == null)
             {
-                previewBuilding = Instantiate(buildingPrefab, newPos, Quaternion.identity);
+                previewBuilding = Instantiate(buildingPrefab, newPos, currentRotation);
                 buildingRenderer = previewBuilding.GetComponentInChildren<Renderer>();
                 collisionCheck = previewBuilding.GetComponentInChildren<BuildingCollision>();
             }
             else
             {
                 previewBuilding.transform.position = newPos;
+                previewBuilding.transform.rotation = currentRotation;
             }
 
             if (previewBuilding != null)
@@ -81,38 +90,57 @@ public class BuildingPlacer : MonoBehaviour
 
     void HandleRotation()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            Vector3 lookDirection = hit.point - previewBuilding.transform.position;
-            lookDirection.y = 0;
-
-            if (lookDirection.magnitude > 0.1f)
+            currentRotation *= Quaternion.Euler(0, 90, 0);
+            if (previewBuilding != null)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-                previewBuilding.transform.rotation = Quaternion.Slerp(previewBuilding.transform.rotation, targetRotation, Time.deltaTime * 10);
+                previewBuilding.transform.rotation = currentRotation;
             }
-        }
-
-        if (previewBuilding != null)
-        {
-            Placement(previewBuilding.transform.position, previewBuilding.transform.rotation);
         }
     }
 
     void Placement(Vector3 newPos, Quaternion newRot)
     {
-        canPlace = !collisionCheck.isOverlapping;
+
+        if (buildingPrefab.name == "DeletePreview")
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                collisionCheck.DeleteInBorders();
+
+
+            }
+            return;
+        }
+        canPlace = collisionCheck == null || !collisionCheck.isOverlapping;
         buildingRenderer.material.color = canPlace ? validColor : invalidColor;
+
+
 
         if (Input.GetMouseButtonDown(0) && canPlace)
         {
+
             GameObject placedBuilding = Instantiate(buildingPrefab, newPos, newRot);
-            placedBuilding.transform.SetParent(buildingsParent.transform); // Now sets the parent properly
+            placedBuilding.transform.SetParent(buildingsParent.transform);
+
+            if (placedBuilding.CompareTag("Road"))
+            {
+                roadManager.UpdateRoadAtPosition(placedBuilding, newPos);
+            }
 
             Destroy(previewBuilding);
             previewBuilding = null;
-            isRotating = false;
         }
+    }
+
+
+    Vector3 SnapToGrid(Vector3 position)
+    {
+        return new Vector3(
+            Mathf.Round(position.x / gridSize) * gridSize,
+            position.y,
+            Mathf.Round(position.z / gridSize) * gridSize
+        );
     }
 }
