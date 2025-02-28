@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class BuildingPlacer : MonoBehaviour
 {
@@ -8,10 +10,11 @@ public class BuildingPlacer : MonoBehaviour
     private GameObject previewBuilding;
     private GameObject buildingsParent;
     private Renderer buildingRenderer;
-    private BuildingCollision collisionCheck;
+    private BuildingStats collisionCheck;
     private bool canPlace = false;
     private Quaternion currentRotation = Quaternion.identity;
-
+    private Material originalMaterial;
+    public Material previewMaterial;
     public Color validColor = Color.green;
     public Color invalidColor = Color.red;
     public float fixedY = 0.5f;
@@ -73,7 +76,9 @@ public class BuildingPlacer : MonoBehaviour
             {
                 previewBuilding = Instantiate(buildingPrefab, newPos, currentRotation);
                 buildingRenderer = previewBuilding.GetComponentInChildren<Renderer>();
-                collisionCheck = previewBuilding.GetComponentInChildren<BuildingCollision>();
+                collisionCheck = previewBuilding.GetComponentInChildren<BuildingStats>();
+                originalMaterial = buildingRenderer.material;
+                buildingRenderer.material = previewMaterial;
             }
             else
             {
@@ -120,10 +125,13 @@ public class BuildingPlacer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && canPlace)
         {
-
+            if (IsPointerOverUILayer())
+            {
+                return;
+            }
             GameObject placedBuilding = Instantiate(buildingPrefab, newPos, newRot);
             placedBuilding.transform.SetParent(buildingsParent.transform);
-
+            placedBuilding.GetComponentInChildren<Renderer>().material = originalMaterial;
             if (placedBuilding.CompareTag("Road"))
             {
                 roadManager.UpdateRoadAtPosition(placedBuilding, newPos);
@@ -133,7 +141,26 @@ public class BuildingPlacer : MonoBehaviour
             previewBuilding = null;
         }
     }
+    private bool IsPointerOverUILayer()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
 
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        foreach (var result in results)
+        {
+            if (result.gameObject.layer == LayerMask.NameToLayer("UI")) 
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     Vector3 SnapToGrid(Vector3 position)
     {
