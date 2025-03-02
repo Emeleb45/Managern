@@ -107,14 +107,15 @@ public class BuildingPlacer : MonoBehaviour
 
     void Placement(Vector3 newPos, Quaternion newRot)
     {
-
         if (buildingPrefab.name == "DeletePreview")
         {
             if (Input.GetMouseButtonDown(0))
             {
-                collisionCheck.DeleteInBorders();
+                if (IsPointerOverUILayer()) return;
+                {
+                    collisionCheck.DeleteInBorders();
 
-
+                }
             }
             return;
         }
@@ -153,7 +154,7 @@ public class BuildingPlacer : MonoBehaviour
 
         foreach (var result in results)
         {
-            if (result.gameObject.layer == LayerMask.NameToLayer("UI")) 
+            if (result.gameObject.layer == LayerMask.NameToLayer("UI"))
             {
                 return true;
             }

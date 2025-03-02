@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using System.Collections;
 public class RoadManager : MonoBehaviour
 {
     public GameObject straightRoadPrefab;
@@ -39,7 +39,7 @@ public class RoadManager : MonoBehaviour
         if (!placedRoads.ContainsKey(position)) return;
 
         GameObject road = placedRoads[position];
-        if (road == null) return; 
+        if (road == null) return;
 
         int connectionCount = 0;
         bool hasLeft = false, hasRight = false, hasForward = false, hasBackward = false;
@@ -100,6 +100,35 @@ public class RoadManager : MonoBehaviour
 
 
             placedRoads[position] = newRoad;
+        }
+    }
+
+    
+    public void RemoveRoadAtPosition(Vector3 position)
+    {
+
+        GameObject roadToRemove = placedRoads[position];
+
+        placedRoads.Remove(position);
+        Destroy(roadToRemove);
+
+
+        List<Vector3> directions = new List<Vector3>
+    {
+        new Vector3(1, 0, 0),
+        new Vector3(-1, 0, 0),
+        new Vector3(0, 0, 1),
+        new Vector3(0, 0, -1)
+    };
+
+        foreach (Vector3 dir in directions)
+        {
+            Vector3 neighborPos = position + dir;
+
+            if (placedRoads.ContainsKey(neighborPos) && placedRoads[neighborPos] != null)
+            {
+                UpdateRoadType(neighborPos);
+            }
         }
     }
 

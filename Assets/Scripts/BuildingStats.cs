@@ -36,16 +36,21 @@ public class BuildingStats : MonoBehaviour
             collisionCount--;
             isOverlapping = collisionCount > 0;
 
-
             overlappingObjects.Remove(other.gameObject);
         }
     }
 
-
     public void DeleteInBorders()
     {
+        RoadManager roadManager = FindFirstObjectByType<RoadManager>();
+
         foreach (GameObject obj in new List<GameObject>(overlappingObjects))
         {
+            if (obj.CompareTag("Road") && roadManager != null)
+            {
+                roadManager.RemoveRoadAtPosition(obj.transform.position);
+            }
+
             Destroy(obj);
         }
 
@@ -53,4 +58,5 @@ public class BuildingStats : MonoBehaviour
         collisionCount = 0;
         isOverlapping = false;
     }
+
 }
