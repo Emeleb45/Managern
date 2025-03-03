@@ -8,14 +8,25 @@ public class ManagerScript : MonoBehaviour
     private BuildingPlacer buildingPlacer;
 
     public GameObject[] ResidentialPrefabs;
+    public GameObject[] CommercialPrefabs;
+    public GameObject[] IndustrialPrefabs;
+    public GameObject[] UtilitiesPrefabs;
     public GameObject[] RoadPrefabs;
     public GameObject[] DevPrefabs;
     public GameObject buildCard;
     public GameObject BuildSelection;
     public GameObject BuildMenuLayout;
+    public GameObject ResidentialParent;
+    public GameObject CommercialParent;
+    public GameObject IndustrialParent;
+    public GameObject UtilitiesParent;
+    public GameObject RoadsParent;
     private BuildingStats buildingStats;
     [Header("Buttons")]
     public Button ResidentialButton;
+    public Button CommercialButton;
+    public Button IndustryButton;
+    public Button UtilitiesButton;
     public Button RoadButton;
     public Button DeleteButton;
 
@@ -24,6 +35,9 @@ public class ManagerScript : MonoBehaviour
         buildingPlacer = GetComponent<BuildingPlacer>();
         buildingPlacer.enabled = false;
         ResidentialButton.onClick.AddListener(() => OpenBuildMenu("Residential"));
+        CommercialButton.onClick.AddListener(() => OpenBuildMenu("Commercial"));
+        IndustryButton.onClick.AddListener(() => OpenBuildMenu("Industry"));
+        UtilitiesButton.onClick.AddListener(() => OpenBuildMenu("Utilities"));
         RoadButton.onClick.AddListener(() => OpenBuildMenu("Road"));
         DeleteButton.onClick.AddListener(() => StartBuilding(0, DevPrefabs));
     }
@@ -32,8 +46,10 @@ public class ManagerScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            CloseBuildMenu();
             StopBuilding();
         }
+        
     }
 
     public void OpenBuildMenu(string type)
@@ -44,14 +60,30 @@ public class ManagerScript : MonoBehaviour
         }
         GameObject[] prefabs = null;
 
-        if (type == "Residential")
+        switch (type)
         {
-            prefabs = ResidentialPrefabs;
+            case "Residential":
+                prefabs = ResidentialPrefabs;
+                buildingPlacer.buildingsParent = ResidentialParent;
+                break;
+            case "Commercial":
+                prefabs = CommercialPrefabs;
+                buildingPlacer.buildingsParent = CommercialParent;
+                break;
+            case "Industry":
+                prefabs = IndustrialPrefabs;
+                buildingPlacer.buildingsParent = IndustrialParent;
+                break;
+            case "Utilities":
+                prefabs = UtilitiesPrefabs;
+                buildingPlacer.buildingsParent = UtilitiesParent;
+                break;
+            case "Road":
+                prefabs = RoadPrefabs;
+                buildingPlacer.buildingsParent = RoadsParent;
+                break;
         }
-        else if (type == "Road")
-        {
-            prefabs = RoadPrefabs;
-        }
+
 
         if (prefabs != null)
         {
@@ -59,11 +91,11 @@ public class ManagerScript : MonoBehaviour
             foreach (GameObject prefab in prefabs)
             {
                 buildingStats = prefab.GetComponent<BuildingStats>();
-           
+
                 GameObject card = Instantiate(buildCard, BuildMenuLayout.transform);
 
                 Button cardButton = card.GetComponent<Button>();
-                int capturedIndex = index; 
+                int capturedIndex = index;
                 cardButton.onClick.AddListener(() => StartBuilding(capturedIndex, prefabs));
 
                 TextMeshProUGUI nameText = card.transform.Find("Label").GetComponent<TextMeshProUGUI>();

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class BuildingStats : MonoBehaviour
 {
     [Header("BuildingStats")]
-
     public string buildingName;
     public int cost;
     public int ElectricityCost;

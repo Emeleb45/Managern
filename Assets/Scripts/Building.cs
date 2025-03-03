@@ -8,8 +8,7 @@ public class BuildingPlacer : MonoBehaviour
     public LayerMask groundLayer;
 
     private GameObject previewBuilding;
-    private GameObject buildingsParent;
-    private Renderer buildingRenderer;
+    internal GameObject buildingsParent;
     private BuildingStats collisionCheck;
     private bool canPlace = false;
     private Quaternion currentRotation = Quaternion.identity;
@@ -24,7 +23,6 @@ public class BuildingPlacer : MonoBehaviour
 
     void Start()
     {
-        buildingsParent = GameObject.Find("Buildings") ?? new GameObject("Buildings");
         roadManager = FindFirstObjectByType<RoadManager>();
     }
 
@@ -75,10 +73,13 @@ public class BuildingPlacer : MonoBehaviour
             if (previewBuilding == null)
             {
                 previewBuilding = Instantiate(buildingPrefab, newPos, currentRotation);
-                buildingRenderer = previewBuilding.GetComponentInChildren<Renderer>();
                 collisionCheck = previewBuilding.GetComponentInChildren<BuildingStats>();
-                originalMaterial = buildingRenderer.material;
-                buildingRenderer.material = previewMaterial;
+                Renderer[] renderers = previewBuilding.GetComponentsInChildren<Renderer>();
+
+                foreach (Renderer renderer in renderers)
+                {
+                    renderer.material = previewMaterial;
+                }
             }
             else
             {
@@ -120,7 +121,12 @@ public class BuildingPlacer : MonoBehaviour
             return;
         }
         canPlace = collisionCheck == null || !collisionCheck.isOverlapping;
-        buildingRenderer.material.color = canPlace ? validColor : invalidColor;
+        Renderer[] renderers = previewBuilding.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material.color = canPlace ? validColor : invalidColor;
+        }
 
 
 
@@ -132,7 +138,6 @@ public class BuildingPlacer : MonoBehaviour
             }
             GameObject placedBuilding = Instantiate(buildingPrefab, newPos, newRot);
             placedBuilding.transform.SetParent(buildingsParent.transform);
-            placedBuilding.GetComponentInChildren<Renderer>().material = originalMaterial;
             if (placedBuilding.CompareTag("Road"))
             {
                 roadManager.UpdateRoadAtPosition(placedBuilding, newPos);
