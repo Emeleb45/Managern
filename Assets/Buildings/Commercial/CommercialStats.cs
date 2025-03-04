@@ -6,7 +6,7 @@ public class CommerialStats : MonoBehaviour
     private StatsManager statsManager;
     public int jobPositions;
     public int ElectricityCost;
-    
+
     public int Employees;
     public int LandValue;
     public int CrimeRate;
@@ -19,4 +19,11 @@ public class CommerialStats : MonoBehaviour
         statsManager.TotalJobPositions += jobPositions;
 
     }
+    void OnDisable()
+    {
+        statsManager.TotalElectricityCosts -= ElectricityCost;
+        statsManager.TotalJobPositions -= jobPositions;
+
+    }
 }
+

@@ -6,7 +6,7 @@ public class ResidentialStats : MonoBehaviour
     private StatsManager statsManager;
     public int populationSpace;
     public int ElectricityCost;
-    
+
     public int population;
     public int LandValue;
     public int CrimeRate;
@@ -14,8 +14,13 @@ public class ResidentialStats : MonoBehaviour
     public int FireHazard;
     void OnEnable()
     {
-        statsManager = FindFirstObjectByType <StatsManager>();
+        statsManager = FindFirstObjectByType<StatsManager>();
         statsManager.TotalElectricityCosts += ElectricityCost;
         statsManager.TotalPopulationSpace += populationSpace;
+    }
+    void OnDisable()
+    {
+        statsManager.TotalElectricityCosts -= ElectricityCost;
+        statsManager.TotalPopulationSpace -= populationSpace;
     }
 }

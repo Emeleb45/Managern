@@ -17,4 +17,9 @@ public class IndustrialStats : MonoBehaviour
         statsManager.TotalElectricityCosts += ElectricityCost;
         statsManager.TotalJobPositions += jobPositions;
     }
+    void OnDisable()
+    {
+        statsManager.TotalElectricityCosts -= ElectricityCost;
+        statsManager.TotalJobPositions -= jobPositions;
+    }
 }

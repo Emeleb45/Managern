@@ -6,7 +6,7 @@ public class BuildingPlacer : MonoBehaviour
 {
     public GameObject buildingPrefab;
     public LayerMask groundLayer;
-
+    private StatsManager statsManager;
     private GameObject previewBuilding;
     internal GameObject buildingsParent;
     private BuildingCollision collisionCheck;
@@ -23,6 +23,7 @@ public class BuildingPlacer : MonoBehaviour
 
     void Start()
     {
+        statsManager = FindFirstObjectByType<StatsManager>();
         roadManager = FindFirstObjectByType<RoadManager>();
     }
 
@@ -136,17 +137,31 @@ public class BuildingPlacer : MonoBehaviour
             {
                 return;
             }
-            GameObject placedBuilding = Instantiate(buildingPrefab, newPos, newRot);
-            placedBuilding.transform.SetParent(buildingsParent.transform);
-            if (placedBuilding.CompareTag("Road"))
+            if (statsManager.TotalMoney < collisionCheck.buildingPrice)
             {
-                roadManager.UpdateRoadAtPosition(placedBuilding, newPos);
+                foreach (Renderer renderer in renderers)
+                {
+                    renderer.material.color = invalidColor;
+                }
             }
-            Transform statsTransform = placedBuilding.transform.Find("Stats");
+            else
+            {
+                GameObject placedBuilding = Instantiate(buildingPrefab, newPos, newRot);
+                placedBuilding.transform.SetParent(buildingsParent.transform);
+                if (placedBuilding.CompareTag("Road"))
+                {
+                    roadManager.UpdateRoadAtPosition(placedBuilding, newPos);
+                }
+                Transform statsTransform = placedBuilding.transform.Find("Stats");
 
-            statsTransform.gameObject.SetActive(true);
-            Destroy(previewBuilding);
-            previewBuilding = null;
+                statsTransform.gameObject.SetActive(true);
+                statsManager.TotalMoney -= collisionCheck.buildingPrice;
+                Destroy(previewBuilding);
+                previewBuilding = null;
+                statsManager.UpdateDisplay();
+            }
+
+
         }
     }
     private bool IsPointerOverUILayer()
