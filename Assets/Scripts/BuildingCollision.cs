@@ -1,15 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class BuildingStats : MonoBehaviour
+public class BuildingCollision : MonoBehaviour
 {
-    [Header("BuildingStats")]
-    public string buildingName;
-    public int cost;
-    public int ElectricityCost;
 
     [Header("BuildingStats")]
     public bool isOverlapping = false;
+    public string buildingName;
+    public int buildingPrice;
     private int collisionCount = 0;
     private List<GameObject> overlappingObjects = new List<GameObject>();
 

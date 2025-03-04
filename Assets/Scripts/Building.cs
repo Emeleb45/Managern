@@ -9,7 +9,7 @@ public class BuildingPlacer : MonoBehaviour
 
     private GameObject previewBuilding;
     internal GameObject buildingsParent;
-    private BuildingStats collisionCheck;
+    private BuildingCollision collisionCheck;
     private bool canPlace = false;
     private Quaternion currentRotation = Quaternion.identity;
     private Material originalMaterial;
@@ -73,7 +73,7 @@ public class BuildingPlacer : MonoBehaviour
             if (previewBuilding == null)
             {
                 previewBuilding = Instantiate(buildingPrefab, newPos, currentRotation);
-                collisionCheck = previewBuilding.GetComponentInChildren<BuildingStats>();
+                collisionCheck = previewBuilding.GetComponentInChildren<BuildingCollision>();
                 Renderer[] renderers = previewBuilding.GetComponentsInChildren<Renderer>();
 
                 foreach (Renderer renderer in renderers)
@@ -142,7 +142,9 @@ public class BuildingPlacer : MonoBehaviour
             {
                 roadManager.UpdateRoadAtPosition(placedBuilding, newPos);
             }
+            Transform statsTransform = placedBuilding.transform.Find("Stats");
 
+            statsTransform.gameObject.SetActive(true);
             Destroy(previewBuilding);
             previewBuilding = null;
         }

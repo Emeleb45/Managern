@@ -21,7 +21,7 @@ public class ManagerScript : MonoBehaviour
     public GameObject IndustrialParent;
     public GameObject UtilitiesParent;
     public GameObject RoadsParent;
-    private BuildingStats buildingStats;
+
     [Header("Buttons")]
     public Button ResidentialButton;
     public Button CommercialButton;
@@ -49,7 +49,7 @@ public class ManagerScript : MonoBehaviour
             CloseBuildMenu();
             StopBuilding();
         }
-        
+
     }
 
     public void OpenBuildMenu(string type)
@@ -59,6 +59,7 @@ public class ManagerScript : MonoBehaviour
             Destroy(child.gameObject);
         }
         GameObject[] prefabs = null;
+
 
         switch (type)
         {
@@ -90,7 +91,8 @@ public class ManagerScript : MonoBehaviour
             int index = 0;
             foreach (GameObject prefab in prefabs)
             {
-                buildingStats = prefab.GetComponent<BuildingStats>();
+                BuildingCollision buildingStats;
+                buildingStats = prefab.GetComponent<BuildingCollision>();
 
                 GameObject card = Instantiate(buildCard, BuildMenuLayout.transform);
 
@@ -99,11 +101,15 @@ public class ManagerScript : MonoBehaviour
                 cardButton.onClick.AddListener(() => StartBuilding(capturedIndex, prefabs));
 
                 TextMeshProUGUI nameText = card.transform.Find("Label").GetComponent<TextMeshProUGUI>();
+                TextMeshProUGUI propertyText = card.transform.Find("Stats").GetComponent<TextMeshProUGUI>();
+
+
                 nameText.text = buildingStats.buildingName;
-                TextMeshProUGUI PropertyText = card.transform.Find("Stats").GetComponent<TextMeshProUGUI>();
-                PropertyText.text = "Cost: " + buildingStats.cost + "\n" + "Electricity Cost: " + buildingStats.ElectricityCost;
+                propertyText.text = "Cost: " + buildingStats.buildingPrice;
+
+
+
                 index++;
-                buildingStats = null;
             }
         }
         BuildSelection.SetActive(true);

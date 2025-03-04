@@ -32,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5819368262901657781}
   - {fileID: 6641275407146463705}
   - {fileID: 1356938631985988125}
   m_Father: {fileID: 0}
@@ -96,10 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc9dbcbddb5122647a22546ca06e8762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: Fire Department
-  cost: 1000
-  ElectricityCost: 75
   isOverlapping: 0
+  buildingName: FireDepartment
+  buildingPrice: 500
 --- !u!1 &3914230881356466870
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,6 +186,54 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4278602086484475848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5819368262901657781}
+  - component: {fileID: 3472635113637207495}
+  m_Layer: 0
+  m_Name: Stats
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &5819368262901657781
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4278602086484475848}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8084736301902896998}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3472635113637207495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4278602086484475848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5e17a51266e7f145bedf30b6f3ac30d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FireProtection: 25
+  jobPositions: 15
+  Employees: 0
+  ElectricityCost: 40
 --- !u!1 &7684412592648113619
 GameObject:
   m_ObjectHideFlags: 0
