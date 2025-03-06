@@ -145,9 +145,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 670348a3163940c47b4591cbe07970cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jobPositions: 5
-  ElectricityCost: 50
-  Employees: 0
+  jobs:
+    Available: 0
+    Space: 25
+  electricity:
+    Available: 0
+    Cost: 150
   LandValue: 0
   CrimeRate: 0
   PollutionOutput: 50

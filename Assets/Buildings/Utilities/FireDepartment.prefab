@@ -230,10 +230,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5e17a51266e7f145bedf30b6f3ac30d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jobs:
+    Available: 0
+    Space: 15
+  electricity:
+    Available: 0
+    Cost: 75
   FireProtection: 25
-  jobPositions: 15
-  Employees: 0
-  ElectricityCost: 40
 --- !u!1 &7684412592648113619
 GameObject:
   m_ObjectHideFlags: 0

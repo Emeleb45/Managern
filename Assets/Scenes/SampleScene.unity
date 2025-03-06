@@ -1006,6 +1006,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5851472824962079680, guid: 4458b30e0abbb06469b693e59f36cb75, type: 3}
+      propertyPath: month
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851472824962079680, guid: 4458b30e0abbb06469b693e59f36cb75, type: 3}
+      propertyPath: tickRate
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851472824962079680, guid: 4458b30e0abbb06469b693e59f36cb75, type: 3}
       propertyPath: TotalMoney
       value: 2000
       objectReference: {fileID: 0}

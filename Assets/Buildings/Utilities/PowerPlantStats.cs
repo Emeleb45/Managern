@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class CommerialStats : MonoBehaviour
+public class PowerPlantStats : MonoBehaviour
 {
     private StatsManager statsManager;
     public Jobs jobs;
-    public Electricity electricity;
+    public ElectricityOutput electricityOutput;
     [System.Serializable]
     public struct Jobs
     {
@@ -13,28 +13,22 @@ public class CommerialStats : MonoBehaviour
         public int Space;
     }
     [System.Serializable]
-    public struct Electricity
+    public struct ElectricityOutput
     {
-        public int Available;
-        public int Cost;
+        public int Output;
     }
-    [Header("Etc")]
-    public int LandValue;
-    public int CrimeRate;
-    public int Pollution;
-    public int FireHazard;
+
+
+
     void OnEnable()
     {
         statsManager = FindFirstObjectByType<StatsManager>();
-        statsManager.totalElectricity.Cost += electricity.Cost;
+        statsManager.totalElectricity.Available += electricityOutput.Output;
         statsManager.totalJobs.Available += jobs.Space;
-
     }
     void OnDisable()
     {
-        statsManager.totalElectricity.Cost -= electricity.Cost;
+        statsManager.totalElectricity.Available -= electricityOutput.Output;
         statsManager.totalJobs.Available -= jobs.Space;
-
     }
 }
-

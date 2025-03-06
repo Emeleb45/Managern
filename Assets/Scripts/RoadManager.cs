@@ -7,9 +7,16 @@ public class RoadManager : MonoBehaviour
     public GameObject turnRoadPrefab;
     public GameObject tJunctionPrefab;
     public GameObject crossroadPrefab;
+    public int roadMaintananceCost = 5;
+    public int totalRoadMaintanance;
+    private StatsManager statsManager;
 
     private Dictionary<Vector3, GameObject> placedRoads = new Dictionary<Vector3, GameObject>();
 
+    void Start()
+    {
+        statsManager = FindFirstObjectByType<StatsManager>();
+    }
     public void UpdateRoadAtPosition(GameObject newRoad, Vector3 position)
     {
         placedRoads[position] = newRoad;
@@ -32,6 +39,7 @@ public class RoadManager : MonoBehaviour
                 UpdateRoadType(neighborPos);
             }
         }
+        SetTotalMaintananance();
     }
 
     void UpdateRoadType(Vector3 position)
@@ -101,9 +109,10 @@ public class RoadManager : MonoBehaviour
 
             placedRoads[position] = newRoad;
         }
+        SetTotalMaintananance();
     }
 
-    
+
     public void RemoveRoadAtPosition(Vector3 position)
     {
 
@@ -130,6 +139,12 @@ public class RoadManager : MonoBehaviour
                 UpdateRoadType(neighborPos);
             }
         }
+        SetTotalMaintananance();
     }
-
+    private void SetTotalMaintananance()
+    {
+        statsManager.TotalExpenses -= totalRoadMaintanance;
+        totalRoadMaintanance = placedRoads.Count * roadMaintananceCost;
+        statsManager.TotalExpenses += totalRoadMaintanance;
+    }
 }

@@ -143,9 +143,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2b912d1bffd3d641bafa1262bd69c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  populationSpace: 5
-  ElectricityCost: 25
-  population: 0
+  population:
+    Current: 0
+    Space: 5
+  electricity:
+    Available: 0
+    Cost: 50
   LandValue: 0
   CrimeRate: 0
   Pollution: 0

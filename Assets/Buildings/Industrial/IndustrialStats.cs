@@ -4,9 +4,21 @@ using System.Collections.Generic;
 public class IndustrialStats : MonoBehaviour
 {
     private StatsManager statsManager;
-    public int jobPositions;
-    public int ElectricityCost;
-    public int Employees;
+    public Jobs jobs;
+    public Electricity electricity;
+    [System.Serializable]
+    public struct Jobs
+    {
+        public int Available;
+        public int Space;
+    }
+    [System.Serializable]
+    public struct Electricity
+    {
+        public int Available;
+        public int Cost;
+    }
+    [Header("Etc")]
     public int LandValue;
     public int CrimeRate;
     public int PollutionOutput;
@@ -14,12 +26,12 @@ public class IndustrialStats : MonoBehaviour
     void OnEnable()
     {
         statsManager = FindFirstObjectByType<StatsManager>();
-        statsManager.TotalElectricityCosts += ElectricityCost;
-        statsManager.TotalJobPositions += jobPositions;
+        statsManager.totalElectricity.Cost += electricity.Cost;
+        statsManager.totalJobs.Available += jobs.Space;
     }
     void OnDisable()
     {
-        statsManager.TotalElectricityCosts -= ElectricityCost;
-        statsManager.TotalJobPositions -= jobPositions;
+        statsManager.totalElectricity.Cost -= electricity.Cost;
+        statsManager.totalJobs.Available -= jobs.Space;
     }
 }

@@ -96,7 +96,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Year: 2000'
+  m_text: 'Year: 2000
+
+    Month 1'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -123,8 +125,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -796,6 +798,7 @@ MonoBehaviour:
   - {fileID: 2344474913152517993, guid: a6d063f0d4464784ca061c3d8ee474b8, type: 3}
   UtilitiesPrefabs:
   - {fileID: 2344474913152517993, guid: 587c95a8f46fd3d41986edb4bd96dde2, type: 3}
+  - {fileID: 2344474913152517993, guid: 1e09ce01ac2a245429575d02ed3b365e, type: 3}
   RoadPrefabs:
   - {fileID: 2642625946889294481, guid: 7fdbbfd167c3539478801d6796c271e8, type: 3}
   DevPrefabs:
@@ -851,6 +854,8 @@ MonoBehaviour:
   turnRoadPrefab: {fileID: 2642625946889294481, guid: bf95bc9953a2059409df164dd0651a58, type: 3}
   tJunctionPrefab: {fileID: 2642625946889294481, guid: e187693ba11dac5478fbf2ad4f0f3ef8, type: 3}
   crossroadPrefab: {fileID: 2642625946889294481, guid: 0cf9d8f2be196cd4f911da154b5a8935, type: 3}
+  roadMaintananceCost: 5
+  totalRoadMaintanance: 0
 --- !u!1 &3378635262389833624
 GameObject:
   m_ObjectHideFlags: 0
@@ -1482,26 +1487,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TotalMoney: 1000
-  TotalPopulation: 0
-  TotalPopulationSpace: 0
-  TotalJobs: 0
-  TotalJobPositions: 0
-  TotalElectricityCosts: 0
-  TotalElectricity: 0
+  totalPopulation:
+    Current: 0
+    Space: 0
+  totalElectricity:
+    Available: 0
+    Cost: 0
+  totalJobs:
+    Taken: 0
+    Available: 0
   TotalLandValue: 0
   TotalCrimeRate: 0
   TotalPollution: 0
   TotalFireCoverage: 0
   TotalExpenses: 0
-  residentialDemand: 0
-  commercialDemand: 0
-  industrialDemand: 0
   taxRate: 0.05
   tickRate: 5
   year: 2000
+  month: 0
   moneyDisplay: {fileID: 7767720726803424302}
   yearDisplay: {fileID: 2561545758961931541}
-  demandDisplay: {fileID: 1815757910762086243}
 --- !u!1 &4700990660353323368
 GameObject:
   m_ObjectHideFlags: 0

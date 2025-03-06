@@ -4,22 +4,33 @@ using System.Collections.Generic;
 public class FireDepartmentStats : MonoBehaviour
 {
     private StatsManager statsManager;
-
+    public Jobs jobs;
+    public Electricity electricity;
+    [System.Serializable]
+    public struct Jobs
+    {
+        public int Available;
+        public int Space;
+    }
+    [System.Serializable]
+    public struct Electricity
+    {
+        public int Available;
+        public int Cost;
+    }
+    [Header("Etc")]
     public int FireProtection;
-    public int jobPositions;
-    public int Employees;
-    public int ElectricityCost;
 
 
     void OnEnable()
     {
         statsManager = FindFirstObjectByType<StatsManager>();
-        statsManager.TotalElectricityCosts += ElectricityCost;
-        statsManager.TotalJobPositions += jobPositions;
+        statsManager.totalElectricity.Cost += electricity.Cost;
+        statsManager.totalJobs.Available += jobs.Space;
     }
     void OnDisable()
     {
-        statsManager.TotalElectricityCosts -= ElectricityCost;
-        statsManager.TotalJobPositions -= jobPositions;
+        statsManager.totalElectricity.Cost -= electricity.Cost;
+        statsManager.totalJobs.Available -= jobs.Space;
     }
 }
