@@ -2,20 +2,20 @@ using UnityEngine;
 
 public class CameraOrbit : MonoBehaviour
 {
-    public Transform target; 
-    public float moveSpeed = 5f; 
+    public Transform target;
+    public float moveSpeed = 5f;
 
-    public float distance = 10.0f; 
-    public float minDistance = 5f; 
-    public float maxDistance = 20f; 
-    public float zoomSpeed = 2f; 
+    public float distance = 10.0f;
+    public float minDistance = 5f;
+    public float maxDistance = 20f;
+    public float zoomSpeed = 2f;
 
-    public float rotationSpeed = 5.0f; 
-    public float minYAngle = 10f; 
-    public float maxYAngle = 80f; 
+    public float rotationSpeed = 5.0f;
+    public float minYAngle = 10f;
+    public float maxYAngle = 80f;
 
-    private float yaw = 0.0f; 
-    private float pitch = 30.0f; 
+    private float yaw = 0.0f;
+    private float pitch = 30.0f;
 
     void Start()
     {
@@ -44,11 +44,11 @@ public class CameraOrbit : MonoBehaviour
     void HandleMovement()
     {
         Vector3 move = new Vector3(
-            Input.GetAxis("Horizontal"), 
+            Input.GetAxis("Horizontal"),
             0,
-            Input.GetAxis("Vertical")   
+            Input.GetAxis("Vertical")
         );
-        
+
 
         Vector3 moveDirection = Quaternion.Euler(0, yaw, 0) * move;
         target.position += moveDirection * moveSpeed * Time.deltaTime;
@@ -56,11 +56,19 @@ public class CameraOrbit : MonoBehaviour
 
     void HandleRotation()
     {
-        if (Input.GetMouseButton(2)) 
+        if (Input.GetMouseButton(2))
         {
             yaw += Input.GetAxis("Mouse X") * rotationSpeed;
             pitch -= Input.GetAxis("Mouse Y") * rotationSpeed;
-            pitch = Mathf.Clamp(pitch, minYAngle, maxYAngle); 
+            pitch = Mathf.Clamp(pitch, minYAngle, maxYAngle);
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            yaw += rotationSpeed / 10;
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            yaw -= rotationSpeed / 10;
         }
     }
 

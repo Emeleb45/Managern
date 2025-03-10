@@ -24,9 +24,14 @@ public class StatsManager : MonoBehaviour
         public int Available;
     }
     public TotalPopulation totalPopulation;
+    public int Happiness;
     public TotalElectricity totalElectricity;
 
-
+    public int TotalHappiness = 0;
+    public int HappinessThresholdForLeaving = 30;
+    public int LeavingRate = 10;
+    public int HappinessThresholdForMovingIn = 50;
+    public int PopulationGrowthRate = 5;
     public TotalJobs totalJobs;
     [Header("Etc")]
     public int TotalLandValue;
@@ -43,6 +48,7 @@ public class StatsManager : MonoBehaviour
     public TextMeshProUGUI moneyDisplay;
     public TextMeshProUGUI yearDisplay;
 
+    public TextMeshProUGUI statsDisplay;
 
     private void Start()
     {
@@ -54,8 +60,21 @@ public class StatsManager : MonoBehaviour
         Monthly();
         InvokeRepeating(nameof(Monthly), tickRate, tickRate);
     }
+    void Update()
+    {
+        if (totalPopulation.Current > totalPopulation.Space)
+        {
+            totalPopulation.Current = totalPopulation.Space;
+        }
+        if (totalJobs.Taken > totalJobs.Available)
+        {
+            totalJobs.Taken = totalJobs.Available;
+        }
+    }
     private void Monthly()
     {
+        CalculateHappiness();
+        HandlePopulationLeaving();
         UpdatePopulation();
         if (month >= 12)
         {
@@ -65,6 +84,7 @@ public class StatsManager : MonoBehaviour
             UpdateDisplay();
             return;
         }
+        ProcessIncome();
         month++;
         UpdateDisplay();
     }
@@ -78,6 +98,7 @@ public class StatsManager : MonoBehaviour
     {
         moneyDisplay.text = $"Money: ${TotalMoney}";
         yearDisplay.text = $"Year: {year}\nMonth: {month}";
+        statsDisplay.text = $"Population: {totalPopulation.Current}\nHappiness: {TotalHappiness}";
 
     }
 
@@ -93,27 +114,78 @@ public class StatsManager : MonoBehaviour
         TotalMoney += totalIncome - expenses;
 
     }
+    private void CalculateHappiness()
+    {
+        int unemployed = totalPopulation.Current - totalJobs.Taken;
+        int happinessChange = 0;
 
+
+        if (unemployed > 0)
+        {
+            happinessChange -= unemployed;
+        }
+
+        if (totalElectricity.Available < totalElectricity.Cost)
+        {
+            happinessChange -= 5;
+        }
+        else
+        {
+            happinessChange += 2;
+        }
+
+
+        if (totalJobs.Available <= 0)
+        {
+            happinessChange -= 3;
+        }
+        else
+        {
+            happinessChange += 1;
+        }
+
+
+        TotalHappiness += happinessChange;
+
+        TotalHappiness = Mathf.Clamp(TotalHappiness, 0, 100);
+    }
+
+    private void HandlePopulationLeaving()
+    {
+        if (TotalHappiness <= HappinessThresholdForLeaving)
+        {
+            int peopleLeaving = Mathf.Min(LeavingRate, totalPopulation.Current);
+            totalPopulation.Current -= peopleLeaving;
+
+
+            totalJobs.Taken = Mathf.Min(totalJobs.Taken, totalPopulation.Current);
+        }
+    }
 
 
     void UpdatePopulation()
     {
-        if (totalJobs.Available > 0 && totalPopulation.Space > totalPopulation.Current)
+
+        if (TotalHappiness > HappinessThresholdForMovingIn)
         {
-            int peopleMovingIn = Mathf.Min(totalJobs.Available, totalPopulation.Space - totalPopulation.Current);
 
-            totalPopulation.Current += peopleMovingIn;
+            int availableSpace = totalPopulation.Space - totalPopulation.Current;
+            int availableJobs = totalJobs.Available - totalJobs.Taken;
 
-            int peopleWithoutJobs = totalPopulation.Current - totalJobs.Taken;
 
-            if (peopleWithoutJobs > 0)
+            if (availableSpace > 0 && availableJobs > 0)
             {
-                int availableJobsForPeople = Mathf.Min(peopleWithoutJobs, totalJobs.Available);
-                totalJobs.Taken += availableJobsForPeople;
+
+                int peopleMovingIn = Mathf.Min(PopulationGrowthRate, availableSpace, availableJobs);
+
+
+                totalPopulation.Current += peopleMovingIn;
+
+
+                totalJobs.Taken += peopleMovingIn;
             }
         }
     }
-
 
 
 

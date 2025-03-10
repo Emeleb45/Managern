@@ -1035,7 +1035,7 @@ GameObject:
   - component: {fileID: 7691703394105641858}
   - component: {fileID: 1815757910762086243}
   m_Layer: 5
-  m_Name: Demand
+  m_Name: Stats
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1088,7 +1088,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'R: Nan% C: NaN% I: Nan}%'
+  m_text: 'Population: 0
+
+    Happiness: 0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1490,9 +1492,15 @@ MonoBehaviour:
   totalPopulation:
     Current: 0
     Space: 0
+  Happiness: 0
   totalElectricity:
     Available: 0
     Cost: 0
+  TotalHappiness: 0
+  HappinessThresholdForLeaving: 30
+  LeavingRate: 10
+  HappinessThresholdForMovingIn: 50
+  PopulationGrowthRate: 5
   totalJobs:
     Taken: 0
     Available: 0
@@ -1507,6 +1515,7 @@ MonoBehaviour:
   month: 0
   moneyDisplay: {fileID: 7767720726803424302}
   yearDisplay: {fileID: 2561545758961931541}
+  statsDisplay: {fileID: 1815757910762086243}
 --- !u!1 &4700990660353323368
 GameObject:
   m_ObjectHideFlags: 0
